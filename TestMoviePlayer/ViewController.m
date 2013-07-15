@@ -18,10 +18,9 @@
     [button setTitle:@"Tap" forState:UIControlStateNormal];
     button.frame = CGRectMake(20, 20, 100, 50);
     [button addTarget:self action:@selector(buttonTapped) forControlEvents:UIControlEventTouchUpInside];
-//    [button addTarget:self action:@selector(buttonTapped) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:button];
     
-    NSString *resourceName = [NSString stringWithFormat:@"DealerMovie%d_%d", 0, 4];
+    NSString *resourceName = [NSString stringWithFormat:@"DealerMovie%d_%d", 0, 3];
     
     NSString *plistPath = [[NSBundle mainBundle] pathForResource:resourceName ofType:@"plist"];
     timeStampDic = [[NSDictionary alloc] initWithContentsOfFile:plistPath];
@@ -52,10 +51,25 @@
     }
 }
 
+- (void)dealloc
+{
+    if (actionTimer)
+    {
+        [actionTimer invalidate];
+        actionTimer = nil;
+    }
+    [timeStampDic release];
+    timeStampDic = nil;
+    [moviePlayer release];
+    moviePlayer = nil;
+    
+    [super dealloc];
+}
+
 -(void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    [self playLoopVideo];
+//    [self playLoopVideo];
 }
 
 #pragma mark- Public Methods
@@ -77,8 +91,11 @@
 #pragma mark- Private Methods
 -(void)buttonTapped
 {
-    //fps = 25, interval = 0.04s
-//    [self playVideoWithStartTime:33.84 Duration:2.6];
+    // fps = 25, interval = 0.04s
+  
+    //Test
+//    [self playVideoWithStartTime:32.2 Duration:2.96];
+    
     [self playVideoWithIndex:13];
 }
 
@@ -108,7 +125,7 @@
     NSLog(@"\nstart %f\nduration %f", [self getStartTimeOfAction:actionIndex], [self getDurationOfAction:actionIndex]);
 }
 
-#pragma mark- Old Methods
+#pragma mark- Test Methods
 - (void)playVideoWithStartTime:(float)startTime Duration:(float)duration
 {
     [moviePlayer pause];
@@ -119,12 +136,12 @@
     }
     moviePlayer.currentPlaybackTime = startTime;
     [moviePlayer play];
-    actionTimer = [NSTimer scheduledTimerWithTimeInterval:duration target:self selector:@selector(playLoopVideoOld) userInfo:nil repeats:NO];
+    actionTimer = [NSTimer scheduledTimerWithTimeInterval:duration target:self selector:@selector(playLoopVideoTest) userInfo:nil repeats:NO];
 }
 
--(void)playLoopVideoOld
+-(void)playLoopVideoTest
 {
-    [self playVideoWithStartTime:0 Duration:2.16];
+    [self playVideoWithStartTime:0 Duration:2.64];
 }
 
 #pragma mark- Notification Methods
